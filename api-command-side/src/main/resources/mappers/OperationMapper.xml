@@ -1,0 +1,65 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="cl.tenpo.api.command.side.infraestructure.persistence.mybatis.mapper.OperationMapper">
+
+	<resultMap id="operationResultMap" type="cl.tenpo.api.command.side.infraestructure.dto.OperationDto"  >
+		<result property="operationId"                             column="OPERATION_ID"                  />
+		<result property="name"                                    column="NAME"                          />
+		<result property="type"                                    column="TYPE"                          />
+		<result property="description"                             column="DESCRIPCION"                   />
+		<result property="values"                                  column="VALUE"                         />
+		<result property="result"                                  column="RESULT"                        />
+		<result property="createdBy"                               column="CREATED_BY"                    />
+		<result property="createdDate"                             column="CREATED_DATE"                  />
+		<result property="details"                                 column="DETAILS"                       />
+	</resultMap>
+
+    <select id="selectOperationIdFromSeq" resultType="java.lang.Long">
+		SELECT
+			NEXTVAL('OPERATION_ID_SEQ')
+	</select>
+
+    <insert id="insertOperation" parameterType="cl.tenpo.api.command.side.infraestructure.dto.OperationDto">
+		<![CDATA[
+    		INSERT INTO OPERATIONS (
+    				OPERATION_ID,
+    				NAME,
+    				TYPE,
+    				DESCRIPCION,
+    				VALUE,
+    				RESULT,
+					CREATED_BY,
+					CREATED_DATE,
+					DETAILS)
+    		VALUES (#{operationId ,jdbcType=BIGINT},
+    			    #{name ,jdbcType=VARCHAR},
+    		    	#{type ,jdbcType=VARCHAR},
+    		    	#{description ,jdbcType=VARCHAR},
+    		    	#{values ,jdbcType=VARCHAR},
+    		    	#{result ,jdbcType=INTEGER},
+    		    	#{createdBy ,jdbcType=VARCHAR},
+					#{createdDate ,jdbcType=TIMESTAMP},
+					#{details ,jdbcType=VARCHAR}
+					)
+		]]>
+   </insert>
+
+
+	<select id="selectOpByTypeAndValues" resultMap="operationResultMap"  useCache="false" flushCache="true">
+        <![CDATA[
+            SELECT
+               	OPERATION_ID,
+    			NAME,
+    			TYPE,
+    			DESCRIPCION,
+    			VALUE,
+    			RESULT,
+				CREATED_BY,
+				CREATED_DATE,
+				DETAILS
+            FROM OPERATIONS
+            WHERE TYPE = #{type, jdbcType=VARCHAR} AND VALUE = #{values, jdbcType=VARCHAR}
+        ]]>
+    </select>
+
+</mapper>
