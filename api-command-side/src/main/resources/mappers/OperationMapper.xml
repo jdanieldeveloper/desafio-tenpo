@@ -1,8 +1,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-        namespace="cl.tenpo.api.command.side.infraestructure.persistence.mybatis.mapper.OperationMapper">
+        namespace="cl.tenpo.api.command.side.infrastructure.persistence.mybatis.mapper.OperationMapper">
 
-	<resultMap id="operationResultMap" type="cl.tenpo.api.command.side.infraestructure.dto.OperationDto"  >
+	<resultMap id="operationResultMap" type="cl.tenpo.api.command.side.infrastructure.dto.OperationDto"  >
 		<result property="operationId"                             column="OPERATION_ID"                  />
 		<result property="name"                                    column="NAME"                          />
 		<result property="type"                                    column="TYPE"                          />
@@ -19,7 +19,7 @@
 			NEXTVAL('OPERATION_ID_SEQ')
 	</select>
 
-    <insert id="insertOperation" parameterType="cl.tenpo.api.command.side.infraestructure.dto.OperationDto">
+    <insert id="insertOperation" parameterType="cl.tenpo.api.command.side.infrastructure.dto.OperationDto">
 		<![CDATA[
     		INSERT INTO OPERATIONS (
     				OPERATION_ID,

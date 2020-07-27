@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="user.manager.side.infraestructure.persistence.mybatis.mapper.PartyMapper">
+	
+	<select id="nexValueForIdentifier" resultType="java.lang.Long">
+		SELECT
+			NEXTVAL('PARTY_ID_SEQ')				
+	</select>
+	
+	<insert id="saveParty" parameterType="user.manager.side.infraestructure.dto.PartyDto">
+		<![CDATA[
+    		INSERT INTO PARTY (PARTY_ID,
+    						   PARTY_TYPE_ID,
+    						   DESCRIPTION,
+    						   STATUS_ID,
+							   CREATED_DATE,
+						   	   CREATED_BY_USER_LOGIN,
+						   	   LAST_MODIFIED_DATE,
+						   	   LAST_MODIFIED_BY_USER_LOGIN)
+    		VALUES (#{partyId,jdbcType=BIGINT},
+    			    #{partyType,jdbcType=VARCHAR},
+    		    	#{description,jdbcType=VARCHAR},
+    		    	#{statusId,jdbcType=VARCHAR},
+					#{createdDate,jdbcType=TIMESTAMP},
+					#{createByUserLogin,jdbcType=VARCHAR},
+					#{lastModifiedDate,jdbcType=TIMESTAMP},
+					#{lastModifiedByUserLogin,jdbcType=VARCHAR})
+		]]>
+   </insert>
+  
+   <insert id="saveUserLogin" parameterType="user.manager.side.infraestructure.dto.PartyDto">
+	   <![CDATA[
+    		INSERT INTO USER_LOGIN (USER_LOGIN_ID,
+    						    	ENABLED,
+    						    	CURRENT_PASSWORD,
+    					   			PARTY_ID)
+    		VALUES (#{userLoginId,jdbcType=VARCHAR},
+    			    'T', -- ENABLED TRUE
+    		    	#{currentPassword,jdbcType=VARCHAR},
+    		    	#{partyId,jdbcType=BIGINT})
+    	]]>
+   </insert>
+
+	<insert id="saveRole" parameterType="user.manager.side.infraestructure.dto.RoleDto">
+	   <![CDATA[
+    		INSERT INTO PARTY_ROLE (PARTY_ID,
+    						    	ROLE_TYPE_ID,
+    						    	DESCRIPTION)
+    		VALUES (#{partyId,jdbcType=BIGINT},
+    		    	#{roleTypeId,jdbcType=VARCHAR},
+    		    	#{description,jdbcType=VARCHAR})
+    	]]>
+   </insert>
+	
+</mapper>

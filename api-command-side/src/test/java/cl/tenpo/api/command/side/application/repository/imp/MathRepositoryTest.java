@@ -2,9 +2,9 @@ package cl.tenpo.api.command.side.application.repository.imp;
 
 import cl.tenpo.api.command.side.application.repository.impl.MathRepositoryImpl;
 import cl.tenpo.api.command.side.domain.Addition;
-import cl.tenpo.api.command.side.infraestructure.dto.OperationDto;
-import cl.tenpo.api.command.side.infraestructure.enums.OperationTypeEnum;
-import cl.tenpo.api.command.side.infraestructure.persistence.dao.MathDao;
+import cl.tenpo.api.command.side.infrastructure.dto.OperationDto;
+import cl.tenpo.api.command.side.infrastructure.enums.OperationTypeEnum;
+import cl.tenpo.api.command.side.infrastructure.persistence.dao.MathDao;
 import com.google.common.collect.Lists;
 import org.junit.Assert;
 import org.junit.Test;

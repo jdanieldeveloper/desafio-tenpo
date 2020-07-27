@@ -3,24 +3,27 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cl.tenpo.api</groupId>
-	<artifactId>api-command-side</artifactId>
+    <artifactId>api-command-side</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>api.command.side</name>
-    <description>Mantiene la logica de negocio y las operaciones CRUD relacionadas con los dispositivos</description>
+    <name>api-command-side</name>
+    <description>Microservicio que encapsula la operacion de suma de dos digitos</description>
 
     <properties>
         <java.version>1.8</java.version>
         <akka.version>2.5.20</akka.version>
-        <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
+        <spring-boot.version>2.3.1.RELEASE</spring-boot.version>
         <spring-boot.mybatis.version>2.0.0</spring-boot.mybatis.version>
-        <spring-swagger.version>2.8.0</spring-swagger.version>
-        <apache-tomcat-jdbc.version>9.0.16</apache-tomcat-jdbc.version>
+        <spring-swagger.version>2.9.2</spring-swagger.version>
+        <fabric8io.docker.version>0.30.0</fabric8io.docker.version>
         <apache-commons-lang3.version>3.5</apache-commons-lang3.version>
-        <device-manager-command-side.final.name>device-manager-command-side</device-manager-command-side.final.name>
-        <device-manager-command-side.final.version>${project.version}</device-manager-command-side.final.version>
+        <api-command-side.final.name>api-command-side</api-command-side.final.name>
+        <api-command-side.final.version>${project.version}</api-command-side.final.version>
+
+        <deploy.local.docker.host>tcp://localhost:2375</deploy.local.docker.host>
     </properties>
+
 
     <dependencies>
         <dependency>
@@ -31,17 +34,6 @@
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>${spring-boot.mybatis.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.zaxxer</groupId>
-                    <artifactId>HikariCP</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -84,12 +76,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-jdbc</artifactId>
-            <version>${apache-tomcat-jdbc.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter-test</artifactId>
             <version>2.0.0</version>
@@ -98,7 +84,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
     <dependencyManagement>
@@ -115,7 +101,7 @@
     </dependencyManagement>
 
     <build>
-        <finalName>${device-manager-command-side.final.name}</finalName>
+        <finalName>${api-command-side.final.name}</finalName>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
@@ -126,6 +112,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -139,13 +132,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warName>${device-manager-command-side.final.name}</warName>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12.4</version>
@@ -153,51 +139,47 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.0.0</version>
-                <configuration>
-                    <updatePomFile>true</updatePomFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
-    <!--
-        <profiles>
-            <profile>
-                <id>dev</id>
-                <activation>
-                    <activeByDefault>true</activeByDefault>
-                </activation>
-                <properties>
-                    <spring.profiles.active>dev</spring.profiles.active>
-                </properties>
-            </profile>
-            <profile>
-                <id>prod</id>
-                <properties>
-                    <spring.profiles.active>prod</spring.profiles.active>
-                </properties>
-            </profile>
-        </profiles>
-        -->
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>${fabric8io.docker.version}</version>
+                        <configuration>
+                            <dockerHost>${deploy.local.docker.host}</dockerHost>
+                            <!-- add your local certs -->
+                            <!--<certPath>${basedir}/src/docker/machine/certs</certPath>-->
+                            <useColor>true</useColor>
+                            <verbose>true</verbose>
+                            <skip>false</skip>
+                            <images>
+                                <image>
+                                    <name>jdanieldeveloper/${api-command-side.final.name}:${api-command-side.final.version}</name>
+                                    <alias>${project.name}</alias>
+                                    <build>
+                                        <contextDir>${basedir}</contextDir>
+                                        <!--<filter>@</filter> -->
+                                        <dockerFile>${basedir}/src/docker/Dockerfile</dockerFile>
+                                    </build>
+                                </image>
+                            </images>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <repositories>
         <repository>

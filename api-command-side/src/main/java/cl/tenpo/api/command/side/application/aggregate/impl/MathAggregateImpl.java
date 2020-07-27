@@ -6,10 +6,11 @@ import cl.tenpo.api.command.side.application.event.CreatedAdditionEvent;
 import cl.tenpo.api.command.side.domain.Addition;
 import cl.tenpo.api.command.side.domain.MathAggregate;
 import cl.tenpo.api.command.side.domain.MathRepository;
-import cl.tenpo.api.command.side.infraestructure.handler.EventHandler;
+import cl.tenpo.api.command.side.infrastructure.handler.EventHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class MathAggregateImpl extends MathAggregate {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public void handle(SumValuesCommand command) {
         Object status;
         try {

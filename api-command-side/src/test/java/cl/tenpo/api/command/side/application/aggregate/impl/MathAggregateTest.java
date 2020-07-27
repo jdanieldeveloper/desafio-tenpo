@@ -4,7 +4,7 @@ import akka.actor.Status;
 import cl.tenpo.api.command.side.application.command.SumValuesCommand;
 import cl.tenpo.api.command.side.domain.Addition;
 import cl.tenpo.api.command.side.domain.MathRepository;
-import cl.tenpo.api.command.side.infraestructure.handler.EventHandler;
+import cl.tenpo.api.command.side.infrastructure.handler.EventHandler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

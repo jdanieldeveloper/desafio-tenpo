@@ -3,7 +3,7 @@ package cl.tenpo.api.command.side.domain;
 import cl.tenpo.api.command.side.application.aggregate.Aggregate;
 import cl.tenpo.api.command.side.application.command.SumValuesCommand;
 import cl.tenpo.api.command.side.application.event.CreatedAdditionEvent;
-import cl.tenpo.api.command.side.infraestructure.bus.CommandBusActor;
+import cl.tenpo.api.command.side.infrastructure.bus.CommandBusActor;
 
 
 public abstract class MathAggregate implements Aggregate {
