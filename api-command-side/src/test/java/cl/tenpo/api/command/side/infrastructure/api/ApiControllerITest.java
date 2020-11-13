@@ -41,7 +41,21 @@ public class ApiControllerITest {
     //private CommandHandler commandHandler;
 
     @Test
-    public void postSumValues200Ok() throws Exception {
+    public void postSumValues200SecurityOk() throws Exception {
+        ValuesModel valuesModel = new ValuesModel();
+        valuesModel.setValue1(1);
+        valuesModel.setValue2(1);
+        //
+        mockMvc.perform(post("/api/math/operation/sum")
+                .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkY2FydmFqYWxzIiwiUk9MRV9WSVNJVE9SX0NSRUFURSI6IlJPTEVfVklTSVRPUl9DUkVBVEUiLCJST0xFX1ZJU0lUT1JfUkVBRCI6IlJPTEVfVklTSVRPUl9SRUFEIiwiZXhwIjoxNTk3NDcyNzI4LCJpYXQiOjE1OTc0MzY3Mjh9.CFu9u6OajjMlIPRKcwJobVZfsNBgLdwYTblJzBXbW70")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(valuesModel)))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void postSumValues200SecurityNOk() throws Exception {
         ValuesModel valuesModel = new ValuesModel();
         valuesModel.setValue1(1);
         valuesModel.setValue2(1);
@@ -50,7 +64,7 @@ public class ApiControllerITest {
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(valuesModel)))
                 .andDo(print())
-        .andExpect(status().isOk());
+        .andExpect(status().isUnauthorized());
     }
 
 

@@ -14,9 +14,9 @@ import user.manager.side.domain.aggregate.model.user.User;
 import user.manager.side.domain.aggregate.model.user.UserIdentifier;
 import user.manager.side.domain.aggregate.model.user.UserRepository;
 import user.manager.side.domain.aggregate.model.user.UserTypeIdentifier;
-import user.manager.side.infraestructure.config.UserCommandSideConfig;
-import user.manager.side.infraestructure.enums.RoleEnum;
-import user.manager.side.infraestructure.enums.UserTypeEnum;
+import user.manager.side.infrastructure.config.UserManageSideConfig;
+import user.manager.side.infrastructure.enums.RoleEnum;
+import user.manager.side.infrastructure.enums.UserTypeEnum;
 
 import java.util.Optional;
 
@@ -25,7 +25,7 @@ import java.util.Optional;
  * Created by daniel.carvajal
  **/
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {UserCommandSideConfig.class})
+@SpringBootTest(classes = {UserManageSideConfig.class})
 public class UserRepositoryITest {
 
     @Autowired
@@ -49,7 +49,7 @@ public class UserRepositoryITest {
 
         User user = new User(userIdentifier, // identifier
                              userType, // userType
-                            "dcarvajal", // userLogin
+                            "dcarvajal1", // userLogin
                             "123456789", // currentPassword
                              Optional.empty()); // roles
 
@@ -74,7 +74,7 @@ public class UserRepositoryITest {
 
         User user = new User(userIdentifier, // identifier
                 userType, // userType
-                "dcarvajal", // userLogin
+                "dcarvajal2", // userLogin
                 "123456789", // currentPassword
                 Optional.of(Lists.newArrayList(createRole, readRole))); // roles
 

@@ -4,17 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import user.manager.side.domain.aggregate.model.user.Identifier;
-import user.manager.side.domain.aggregate.model.user.Role;
 import user.manager.side.domain.aggregate.model.user.User;
 import user.manager.side.domain.aggregate.model.user.UserRepository;
-import user.manager.side.domain.aggregate.model.user.UserTypeIdentifier;
-import user.manager.side.infraestructure.converter.IdentifierConverter;
-import user.manager.side.infraestructure.converter.FromUserConverter;
-import user.manager.side.infraestructure.dto.PartyDto;
-import user.manager.side.infraestructure.dto.RoleDto;
-import user.manager.side.infraestructure.enums.UserTypeEnum;
-import user.manager.side.infraestructure.persistence.mybatis.dao.PartyDao;
+import user.manager.side.infrastructure.converter.IdentifierConverter;
+import user.manager.side.infrastructure.converter.FromUserConverter;
+import user.manager.side.infrastructure.dto.PartyDto;
+import user.manager.side.infrastructure.dto.RoleDto;
+import user.manager.side.infrastructure.persistence.mybatis.dao.PartyDao;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -48,10 +46,11 @@ public class UserRepositoryImpl implements UserRepository {
             if (isAdd) {
                 partyDao.saveParty(partyDto);
                 //
-                for(RoleDto role : partyDto.getRoleDtos()){
-                    partyDao.saveUserRole(role);
+                if(Objects.nonNull(partyDto.getRoleDtos()) && !partyDto.getRoleDtos().isEmpty()){
+                    for(RoleDto role : partyDto.getRoleDtos()){
+                        partyDao.saveUserRole(role);
+                    }
                 }
-
                 newUser = Optional.of(user);
             }
         return newUser;

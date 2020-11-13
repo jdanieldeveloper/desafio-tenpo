@@ -29,7 +29,7 @@ public class CommandHandler implements Handler {
      * @param command
      * @return la posible respuesta representada en un futuro
      */
-    public CompletionStage<Object> handle(SumValuesCommand command) {
+    public CompletionStage<Object> handle (SumValuesCommand command) {
         return FutureConverters.toJava(Patterns.ask(commandBus, command, 5000));
     }
 }

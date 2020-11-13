@@ -26,9 +26,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @author daniel.carvajal
  */
 @Configuration
-@EnableAutoConfiguration
-//@EnableWebMvc
 @EnableSwagger2
+@EnableAutoConfiguration
 public class ApiCmdSideMvcConfig implements WebMvcConfigurer {
 
     @Autowired

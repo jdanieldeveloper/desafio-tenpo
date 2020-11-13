@@ -18,15 +18,22 @@
 		<spring-boot.version>2.1.4.RELEASE</spring-boot.version>
 		<spring-boot.mybatis.version>2.0.0</spring-boot.mybatis.version>
 		<spring-swagger.version>2.8.0</spring-swagger.version>
+		<fabric8io.docker.version>0.30.0</fabric8io.docker.version>
 		<apache-commons-lang3.version>3.5</apache-commons-lang3.version>
 		<user-manager-side.final.name>user-manager-command-side</user-manager-side.final.name>
 		<user-manager-side.final.version>${project.version}</user-manager-side.final.version>
+
+		<deploy.local.docker.host>tcp://localhost:2375</deploy.local.docker.host>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -57,6 +64,12 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>${apache-commons-lang3.version}</version>
 		</dependency>
+		<!-- jwt specific -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -71,6 +84,11 @@
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter-test</artifactId>
 			<version>2.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -116,6 +134,46 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<spring.profiles.active>dev</spring.profiles.active>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>${fabric8io.docker.version}</version>
+						<configuration>
+							<dockerHost>${deploy.local.docker.host}</dockerHost>
+							<!-- add your local certs -->
+							<!--<certPath>${basedir}/src/docker/machine/certs</certPath>-->
+							<useColor>true</useColor>
+							<verbose>true</verbose>
+							<skip>false</skip>
+							<images>
+								<image>
+									<name>jdanieldeveloper/${user-manager-side.final.name}:${user-manager-side.final.version}</name>
+									<alias>${project.name}</alias>
+									<build>
+										<contextDir>${basedir}</contextDir>
+										<!--<filter>@</filter> -->
+										<dockerFile>${basedir}/src/docker/Dockerfile</dockerFile>
+									</build>
+								</image>
+							</images>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<repositories>
 		<repository>
 			<id>spring-snapshots</id>

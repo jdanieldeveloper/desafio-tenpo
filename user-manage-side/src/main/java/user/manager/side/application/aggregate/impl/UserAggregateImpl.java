@@ -15,9 +15,9 @@ import user.manager.side.domain.aggregate.model.user.UserAggregate;
 import user.manager.side.domain.aggregate.model.user.UserIdentifier;
 import user.manager.side.domain.aggregate.model.user.UserRepository;
 import user.manager.side.domain.aggregate.model.user.UserTypeIdentifier;
-import user.manager.side.infraestructure.enums.RoleEnum;
-import user.manager.side.infraestructure.enums.UserTypeEnum;
-import user.manager.side.infraestructure.handler.EventHandler;
+import user.manager.side.infrastructure.enums.RoleEnum;
+import user.manager.side.infrastructure.enums.UserTypeEnum;
+import user.manager.side.infrastructure.handler.EventHandler;
 
 import java.util.Optional;
 
@@ -33,7 +33,6 @@ public class UserAggregateImpl extends UserAggregate {
 
 
     @Override
-    @Transactional
     public void handle(CreateUserCommand command) {
         Optional<Identifier> identifier = userRepository.getUserId();
         if(identifier.isPresent()){
